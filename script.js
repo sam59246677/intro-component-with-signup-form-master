@@ -1,42 +1,39 @@
-const form = document.getElementById('signup-form');
+/* form validation
+- objevení vykřičníku a textu pod formulářem */
 
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
+var exclamation = document.getElementsByClassName("error");
+var form = document.getElementById("form");
+var firstName = document.getElementById("firstName");
+var lastName = document.getElementById("lastName");
+var email = document.getElementById("email");
+var password = document.getElementById("password");
+var formError = document.getElementsByClassName("form_error");
+var input = document.getElementsByTagName("input");
 
-  const firstName = document.getElementById('firstName');
-  const lastName = document.getElementById('lastName');
-  const email = document.getElementById('email');
-  const password = document.getElementById('password');
+/* validation*/
+  function formValidation(event) {
+    /*for loop for all input fields except submit input, so it is 4*/
+    for (i = 0; i < 4; i++){
+      /*clear the form*/
+      input[i].classList.remove("error");
+      formError[i].style.display = "none";
+      
+      /*email validation*/
+      if (!email.validity.valid) {
+        formError[2].style.display = "block";
+        email.classList.add("error");
+        event.preventDefault();
+      }
 
-  validateField(firstName, 'First Name');
-  validateField(lastName, 'Last Name');
-  validateEmail(email);
-  validateField(password, 'Password');
-});
+      /*validation of other fields*/
+      if((input.type != "email" || input.type != "submit") && input[i].value == ""){
+      formError[i].style.display = "block";
+      input[i].classList.add("error");
+      event.preventDefault();
+      }
+    }
 
-function validateField(input, fieldName) {
-  const error = input.nextElementSibling;
-  if (input.value.trim() === '') {
-    input.classList.add('error');
-    error.textContent = `${fieldName} cannot be empty`;
-  } else {
-    input.classList.remove('error');
-    error.textContent = '';
   }
-}
 
-function validateEmail(input) {
-  const error = input.nextElementSibling;
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  if (input.value.trim() === '') {
-    input.classList.add('error');
-    error.textContent = 'Email cannot be empty';
-  } else if (!emailPattern.test(input.value)) {
-    input.classList.add('error');
-    error.textContent = 'Looks like this is not an email';
-  } else {
-    input.classList.remove('error');
-    error.textContent = '';
-  }
-}
+  /*event listener on button, call the formValidation function*/
+  form.addEventListener("submit", formValidation, false)
